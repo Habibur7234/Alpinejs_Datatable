@@ -3,60 +3,54 @@
 <head>
     <meta charset="utf-8">
     <title>ALPINE tests</title>
+    <link href="style.css" rel="stylesheet">
 </head>
 
 <style>
-    .container {
-        margin-top: 7%;
-        margin-left: 30%;
-    }
-td{
-    padding: 3px 99px 2px 99px;
-}
-.search{
-    margin-left: 41%;
-    padding: 5px;
-    margin-bottom: 15px;
-    background: #ffffff;
-    border-radius: 5px;
-}
-tbody{
 
-    background: antiquewhite;
-}
-
-th{
-    position: sticky;
-    padding: 12px 20px 12px 20px;
-    background: rgba(91, 130, 105, 0.82);
-}
 
 </style>
 <body style="background: aliceblue">
 <script src="//unpkg.com/alpinejs" defer></script>
 
 <div x-data="data" x-init="getApiData" class="container">
-<!--    <div x-data="{ open: false }">-->
-<!--        <button @click="open = ! open">Expand</button>-->
+    <!--    <div x-data="{ open: false }">-->
+    <!--        <button @click="open = ! open">Expand</button>-->
 
-<!--        <div x-show="open">-->
-<!--            <input type="text"></div>-->
-<!--    </div>-->
+    <!--        <div x-show="open">-->
+    <!--            <input type="text"></div>-->
+    <!--    </div>-->
     <!--    <button x-on:click="status=!status" >click me</button>-->
     <!--    <button x-on:click="addData" >Fuck me</button>-->
     <!--    <button x-on:click="modifyData('11')" >Modify  me</button>-->
 
-    <input class="search" x-on:input.change="updateData" x-model="globalSearchText" placeholder="search globally here">
-    <input class="search" x-on:input.change="updateData" x-model="searchText[0].name" placeholder="search name here">
-    <input class="search" x-on:input.change="updateData" x-model="searchText[0].address" placeholder="search address here">
-    <input class="search" x-on:input.change="updateData" x-model="searchText[0].age" placeholder="search age here">
+
+    <div class="main_search_div">
+
+        <div><input class="search" x-on:input.change="updateData" x-show="status.age" x-model="searchText[0].age"
+                    placeholder="search age here">
+        </div>
+        <div><input class="search" x-on:input.change="updateData" x-show="status.address"
+                    x-model="searchText[0].address" placeholder="search address here">
+        </div>
+        <div><input class="search_global" x-on:input.change="updateData" x-model="globalSearchText"
+                    placeholder="search globally here">
+        </div>
+
+
+    </div>
+
 
     <table>
         <tbody>
         <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Address</th>
+            <th x-on:click="status.name= ! status.name">Name</th>
+            <div>
+                <input class="search_name" x-on:input.change="updateData" x-show="status.name" x-model="searchText[0].name"
+                       placeholder="search name here">
+            </div>
+            <th x-on:click="status.age= ! status.age">Age</th>
+            <th x-on:click="status.address= ! status.address">Address</th>
         </tr>
         <template x-for="item in updateData">
             <tr>
@@ -74,73 +68,6 @@ th{
         </tbody>
     </table>
 </div>
-<script>
-    let data = {
-        status: false,
-        apiData: [],
-        globalSearchText : "",
-        searchText: [{
-            name: "",
-            address: "",
-            age: ""
-        }],
-        async getApiData() {
-            this.apiData = await (await fetch('https://62b15c56196a9e987033e9c4.mockapi.io/api/1/status')).json();
-        },
-        // addData() {
-        //     let obj = {name: 'Ohh No ', address: 'address 2', age: 23, id: '2'}
-        //     this.apiData.unshift(obj)
-        // },
-        // modifyData(dataID) {
-        //     this.apiData.find((o, i) => {
-        //         if (o.id === dataID) {
-        //             this.apiData[i] = {name: 'BBBBB', address: 'address 2', age: 23, id: '2'};
-        //             return true; // stop searching
-        //         }
-        //     });
-        // },
-        updateData() {
-
-            if(this.globalSearchText){
-                    console.log("i entered")
-
-                    return this.apiData.filter(function (el) {
-
-                            return el.name.startsWith(this) ||
-                            el.age.toString().startsWith(this) ||
-                            el.address.startsWith(this);
-                        }, this.globalSearchText
-                    );
-
-            }
-
-            let query = {}
-            for (let key in this.searchText[0]){
-                if(this.searchText[0][key]){
-                    +this.searchText[0][key] ? query[key] = +this.searchText[0][key] : query[key] = this.searchText[0][key]
-                }
-            }
-            let result = this.apiData.filter(search, query);
-            function search(user){
-                return Object.keys(this).every((key) => user[key].toString().startsWith(this[key]));
-            }
-            return result
-
-            // if (this.searchText.name) {
-            //     return this.apiData.filter(function (ad) {
-            //
-            //             return ad.name && ad.name.startsWith(this.name)
-            //                 //&& ad.address.startsWith(this.address) && ad.age.startsWith(this.age)
-            //             //return this.apiData
-            //         },this.searchText
-            //     );
-            // } else {
-            //     return this.apiData
-            // }
-        },
-
-    }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
