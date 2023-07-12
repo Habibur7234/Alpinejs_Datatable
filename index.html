@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" xmlns:x-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>ALPINE tests</title>
+</head>
+
+<style>
+    .container {
+        margin-top: 7%;
+        margin-left: 30%;
+    }
+td{
+    padding: 3px 99px 2px 99px;
+}
+.search{
+    margin-left: 41%;
+    padding: 5px;
+    margin-bottom: 15px;
+    background: #ffffff;
+    border-radius: 5px;
+}
+tbody{
+
+    background: antiquewhite;
+}
+
+th{
+    position: sticky;
+    padding: 12px 20px 12px 20px;
+    background: rgba(91, 130, 105, 0.82);
+}
+
+</style>
+<body style="background: aliceblue">
+<script src="//unpkg.com/alpinejs" defer></script>
+
+<div x-data="data" x-init="getApiData" class="container">
+<!--    <div x-data="{ open: false }">-->
+<!--        <button @click="open = ! open">Expand</button>-->
+
+<!--        <div x-show="open">-->
+<!--            <input type="text"></div>-->
+<!--    </div>-->
+    <!--    <button x-on:click="status=!status" >click me</button>-->
+    <!--    <button x-on:click="addData" >Fuck me</button>-->
+    <!--    <button x-on:click="modifyData('11')" >Modify  me</button>-->
+
+    <input class="search" x-on:input.change="updateData" x-model="globalSearchText" placeholder="search globally here">
+    <input class="search" x-on:input.change="updateData" x-model="searchText[0].name" placeholder="search name here">
+    <input class="search" x-on:input.change="updateData" x-model="searchText[0].address" placeholder="search address here">
+    <input class="search" x-on:input.change="updateData" x-model="searchText[0].age" placeholder="search age here">
+
+    <table>
+        <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Address</th>
+        </tr>
+        <template x-for="item in updateData">
+            <tr>
+                <td>
+                    <p x-text="item.name"></p>
+                </td>
+                <td>
+                    <p x-text="item.age"></p>
+                </td>
+                <td>
+                    <p x-text="item.address"></p>
+                </td>
+            </tr>
+        </template>
+        </tbody>
+    </table>
+</div>
+<script>
+    let data = {
+        status: false,
+        apiData: [],
+        globalSearchText : "",
+        searchText: [{
+            name: "",
+            address: "",
+            age: ""
+        }],
+        async getApiData() {
+            this.apiData = await (await fetch('https://62b15c56196a9e987033e9c4.mockapi.io/api/1/status')).json();
+        },
+        // addData() {
+        //     let obj = {name: 'Ohh No ', address: 'address 2', age: 23, id: '2'}
+        //     this.apiData.unshift(obj)
+        // },
+        // modifyData(dataID) {
+        //     this.apiData.find((o, i) => {
+        //         if (o.id === dataID) {
+        //             this.apiData[i] = {name: 'BBBBB', address: 'address 2', age: 23, id: '2'};
+        //             return true; // stop searching
+        //         }
+        //     });
+        // },
+        updateData() {
+
+            if(this.globalSearchText){
+                    console.log("i entered")
+
+                    return this.apiData.filter(function (el) {
+
+                            return el.name.startsWith(this) ||
+                            el.age.toString().startsWith(this) ||
+                            el.address.startsWith(this);
+                        }, this.globalSearchText
+                    );
+
+            }
+
+            let query = {}
+            for (let key in this.searchText[0]){
+                if(this.searchText[0][key]){
+                    +this.searchText[0][key] ? query[key] = +this.searchText[0][key] : query[key] = this.searchText[0][key]
+                }
+            }
+            let result = this.apiData.filter(search, query);
+            function search(user){
+                return Object.keys(this).every((key) => user[key].toString().startsWith(this[key]));
+            }
+            return result
+
+            // if (this.searchText.name) {
+            //     return this.apiData.filter(function (ad) {
+            //
+            //             return ad.name && ad.name.startsWith(this.name)
+            //                 //&& ad.address.startsWith(this.address) && ad.age.startsWith(this.age)
+            //             //return this.apiData
+            //         },this.searchText
+            //     );
+            // } else {
+            //     return this.apiData
+            // }
+        },
+
+    }
+</script>
+
+</body>
+</html>
