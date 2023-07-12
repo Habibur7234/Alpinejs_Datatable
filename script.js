@@ -1,19 +1,21 @@
 
 window.data = {
     status:{
-        name:false,
-        age:false,
-        address: false
+        name: false,
+        address: false,
+        branch: false,
+        email:false
     },
     apiData: [],
     globalSearchText : "",
     searchText: [{
         name: "",
         address: "",
-        age: ""
+        branch: "",
+        email:""
     }],
     async getApiData() {
-        this.apiData = await (await fetch('https://62b15c56196a9e987033e9c4.mockapi.io/api/1/status')).json();
+        this.apiData = await (await fetch('https://62b04e7db0a980a2ef4ff30a.mockapi.io/api/shop')).json();
     },
     // addData() {
     //     let obj = {name: 'Ohh No ', address: 'address 2', age: 23, id: '2'}
@@ -28,15 +30,17 @@ window.data = {
     //     });
     // },
     updateData() {
-
         if(this.globalSearchText){
-            console.log("i entered")
+            for (let key in this.searchText[0]){
+                    this.searchText[0][key] = ""
+            }
 
             return this.apiData.filter(function (el) {
 
                     return el.name.startsWith(this) ||
-                        el.age.toString().startsWith(this) ||
-                        el.address.startsWith(this);
+                        el.branch.toString().startsWith(this) ||
+                        el.address.startsWith(this) ||
+                        el.email.startsWith(this);
                 }, this.globalSearchText
             );
 
@@ -48,13 +52,15 @@ window.data = {
                 +this.searchText[0][key] ? query[key] = +this.searchText[0][key] : query[key] = this.searchText[0][key]
             }
         }
-        let result = this.apiData.filter(search, query);
+        return this.apiData.filter(search, query);
         function search(user){
             return Object.keys(this).every((key) => user[key].toString().startsWith(this[key]));
         }
-        return result
+        //return result
 
     },
+
+
 
 }
 

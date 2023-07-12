@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <title>ALPINE tests</title>
     <link href="style.css" rel="stylesheet">
+    <link
+            href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+            rel="stylesheet"
+    />
 </head>
 
 <style>
@@ -26,42 +30,66 @@
 
 
     <div class="main_search_div">
-
-        <div><input class="search" x-on:input.change="updateData" x-show="status.age" x-model="searchText[0].age"
-                    placeholder="search age here">
+<!--        <div>-->
+<!--            <input class="search_name" x-on:input.change="updateData" x-show="status.name" x-model="searchText[0].name"-->
+<!--                   placeholder="search name here">-->
+<!--        </div>-->
+        <div>
         </div>
-        <div><input class="search" x-on:input.change="updateData" x-show="status.address"
-                    x-model="searchText[0].address" placeholder="search address here">
+        <div>
+        </div>
+        <div>
         </div>
         <div><input class="search_global" x-on:input.change="updateData" x-model="globalSearchText"
                     placeholder="search globally here">
         </div>
 
-
     </div>
-
 
     <table>
         <tbody>
         <tr>
             <th x-on:click="status.name= ! status.name">Name</th>
-            <div>
-                <input class="search_name" x-on:input.change="updateData" x-show="status.name" x-model="searchText[0].name"
-                       placeholder="search name here">
-            </div>
-            <th x-on:click="status.age= ! status.age">Age</th>
+
+            <th x-on:click="status.branch= ! status.branch">Branch</th>
+            <th x-on:click="status.email= ! status.email">Email</th>
             <th x-on:click="status.address= ! status.address">Address</th>
         </tr>
+
+
+        <tr>
+            <td>
+               <input class="search_name" x-on:input.change="updateData" x-show="status.name" @click="status.name" x-model="searchText[0].name"
+                              placeholder="search here">
+            </td>
+            <td>
+                <input class="search_branch" x-on:input.change="updateData" x-show="status.branch" x-model="searchText[0].branch"
+                       placeholder="search  here">
+            </td>
+            <td>
+                <input class="search_email" x-on:input.change="updateData" x-show="status.email"
+                       x-model="searchText[0].email" placeholder="search  here">
+            </td>
+            <td>
+                <input class="search_address" x-on:input.change="updateData" x-show="status.address"
+                       x-model="searchText[0].address" placeholder="search  here">
+            </td>
+
+        </tr>
+
         <template x-for="item in updateData">
             <tr>
                 <td>
                     <p x-text="item.name"></p>
                 </td>
                 <td>
-                    <p x-text="item.age"></p>
+                    <p x-text="item.branch"></p>
                 </td>
                 <td>
                     <p x-text="item.address"></p>
+                </td>
+                <td>
+                    <p x-text="item.email"></p>
                 </td>
             </tr>
         </template>
